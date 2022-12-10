@@ -1,13 +1,15 @@
 package com.example.calculator
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import java.util.Stack
-import kotlin.math.round
+import kotlin.math.pow
 
 class MainActivity : AppCompatActivity() {
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -49,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         buttonMultiply.setOnClickListener { textField.text = "${textField.text}*" }
         buttonDivide.setOnClickListener { textField.text = "${textField.text}/" }
         buttonPower.setOnClickListener { textField.text = "${textField.text}^" }
-        buttonEquals.setOnClickListener { calculation() }
+        buttonEquals.setOnClickListener { textField.text = calculation(textField.text.toString()) }
         buttonOpenParenthesis.setOnClickListener { textField.text = "${textField.text}(" }
         buttonCloseParenthesis.setOnClickListener { textField.text = "${textField.text})" }
         buttonDecimal.setOnClickListener { textField.text = "${textField.text}." }
@@ -57,78 +59,118 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-//    private fun calculation() : String {
-//        fun roundOff(precision: Int, value: Double): Double {
-//            val offset = 10.0 * precision
-//            return round(value * offset) / offset
-//        }
-//
-//        val precision = 3
-//        var solution = 0.0
-//
-//        fun precedenceLower(ch: Char, peek: Char?) : Boolean{
-//            when (ch) {
-//                '+' -> if (peek != '+' && peek != '-' && peek != '(') {
-//                    return true
-//                }
-//                '-' -> if (peek != '+' && peek != '-' && peek != '(') {
-//                    return true
-//                }
-//                '*' -> if (peek == '^' || peek == '+' || peek == '-') {
-//                    return true
-//                }
-//                '/' -> if (peek == '^' || peek == '+' || peek == '-') {
-//                    return true
-//                }
-//                else -> {
-//                    return false
-//                }
-//            }
-//        }
-//
-//        fun inFixtoPostFix(inExp: String) : String {
-//            var postExp = mutableListOf<String>()
-//            var stack = Stack<Char>()
-//
-//            for (ch in inExp) {
-//                val operator = listOf<Char>('+','-','*','/','^')
-//                when (ch) {
-//                    '(' -> stack.push('(')
-//                    ')' -> {
-//                        for (i in stack) {
-//                            val popped = stack.pop()
-//                            if (popped == '(') {
-//                                break
-//                            }
-//                            postExp.add(-1, popped)
-//                        }
-//                    }
-//                    in operator -> {
-//                        if (precedenceLower(ch, stack.peek())) {
-//                            for (i in stack) {
-//                                val popped = stack.pop()
-//                                postExp.add(-1,popped)
-//                                if (precedenceLower(i, ch)) {
-//                                    break
-//                                }
-//                            }
-//                        } else {
-//                            stack.push(ch)
-//                        }
-//                    }
-//                    else -> {postExp.add(-1, ch)}
-//                }
-//            }
-//
-//            for (i in stack) {
-//                val popped = stack.pop()
-//                postExp.add(-1,popped)
-//            }
-//            return postExp.joinToString()
-//        }
-//
-//
-//
-//        return roundOff(precision, solution).toString()
-//    }
+    private fun calculation(inFix: String) : String{
+        val operators = listOf("+","-","*","/","^")
+        val allOperators = listOf("+","-","*","/","^","(",")")
+
+        fun stringToList(s: String): List<String> {
+            val l = mutableListOf<String>()
+            var current = ""
+            for (i in s) {
+                val j = i.toString()
+                if (j in allOperators) {
+                    if (current != "") { l += current }
+                    l += j
+                    current = ""
+                } else {
+                    current += j
+                }
+            }
+            return l
+        }
+
+        fun precedenceLower(ch: String, peek: String?) : Boolean{
+            when (ch) {
+                "+" -> if (peek != "+" && peek != "-" && peek != "(") {
+                    return true
+                }
+                "-" -> if (peek != "+" && peek != "-" && peek != "(") {
+                    return true
+                }
+                "*" -> if (peek == "^" || peek == "+" || peek == "-") {
+                    return true
+                }
+                "/" -> if (peek == "^" || peek == "+" || peek == "-") {
+                    return true
+                }
+            }
+            return false
+        }
+
+        fun basicCalc(first: Double, second: Double, operation: String) : String {
+            return when (operation) {
+                "+" -> (first+second).toString()
+                "-" -> (first-second).toString()
+                "*" -> (first*second).toString()
+                "/" -> (first/second).toString()
+                "^" -> (first.pow(second)).toString()
+                else -> (0.0).toString()
+            }
+        }
+
+        fun inFixToPostFix(inFix: String): Stack<Any> {
+            val inExp = stringToList(inFix)
+            val postExp = Stack<Any>()
+            val stack = Stack<Any>()
+
+            for (ch in inExp) {
+                when (ch) {
+                    "(" -> stack.push("(")
+                    ")" -> {
+                        stack.pop()
+                        while (true) {
+                            val popped = stack.pop()
+                            if (popped == "(") {
+                                break
+                            }
+                            postExp.push(popped)
+                        }
+                    }
+                    in operators -> {
+                        if (precedenceLower(ch, stack.peek() as String)) {
+                            for (each in stack) {
+                                if (precedenceLower(each as String, ch)) {
+                                    stack.push(ch)
+                                    break
+                                }
+                                val popped = stack.pop()
+                                postExp.push(popped)
+                            }
+                        } else {
+                            stack.push(ch)
+                        }
+                    }
+                    else -> {
+                        postExp.push(ch)
+                    }
+                }
+            }
+            for (i in stack) {
+                val popped = stack.pop()
+                postExp.push(popped)
+            }
+            return postExp
+        }
+
+        fun calculatePostFix(postExp: Stack<Any>) : String {
+            val stack = Stack<String>()
+            for (i in postExp) {
+                if (i !in allOperators) {
+                    stack.push(i as String?)
+                } else {
+                    val operator = stack.pop()
+                    val popped1 = stack.pop()
+                    val popped2 = stack.pop()
+                    stack.push(basicCalc(popped1.toDouble(), popped2.toDouble(), operator))
+                }
+            }
+            return if (postExp.size == 1) {
+                postExp.pop().toString()
+            } else {
+                "Invalid Expression"
+            }
+        }
+
+        return calculatePostFix(inFixToPostFix(inFix))
+    }
 }
