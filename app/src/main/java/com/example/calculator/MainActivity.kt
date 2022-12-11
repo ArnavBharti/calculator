@@ -51,7 +51,8 @@ class MainActivity : AppCompatActivity() {
         buttonMultiply.setOnClickListener { textField.text = "${textField.text}*" }
         buttonDivide.setOnClickListener { textField.text = "${textField.text}/" }
         buttonPower.setOnClickListener { textField.text = "${textField.text}^" }
-        buttonEquals.setOnClickListener { textField.text = calculation(textField.text.toString()) }
+//        buttonEquals.setOnClickListener { textField.text = calculation(textField.text.toString()) }
+        buttonEquals.setOnClickListener { textField.text = "Answer: " }
         buttonOpenParenthesis.setOnClickListener { textField.text = "${textField.text}(" }
         buttonCloseParenthesis.setOnClickListener { textField.text = "${textField.text})" }
         buttonDecimal.setOnClickListener { textField.text = "${textField.text}." }
