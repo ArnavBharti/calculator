@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import java.util.*
+import com.kieferlam.postfix.syntax.Postfix
 
 class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
@@ -36,6 +37,12 @@ class MainActivity : AppCompatActivity() {
         val buttonCloseParenthesis: Button = findViewById(R.id.buttonCloseParenthesis)
         val buttonAllClear: Button = findViewById(R.id.buttonAllClear)
 
+        fun calc(infixExp: String) : String {
+            val postfix = Postfix.from(infixExp)
+            val result = Postfix.evaluate(postfix)
+            return result.value.toString()
+        }
+
         buttonOne.setOnClickListener { textField.text = "${textField.text}1" }
         buttonTwo.setOnClickListener { textField.text = "${textField.text}2" }
         buttonThree.setOnClickListener { textField.text = "${textField.text}3" }
@@ -51,79 +58,16 @@ class MainActivity : AppCompatActivity() {
         buttonMultiply.setOnClickListener { textField.text = "${textField.text}*" }
         buttonDivide.setOnClickListener { textField.text = "${textField.text}/" }
         buttonPower.setOnClickListener { textField.text = "${textField.text}^" }
-        buttonEquals.setOnClickListener { outputBox.text = calculate(textField.text.toString()) }
+        buttonEquals.setOnClickListener { outputBox.text = calc(textField.text.toString()) }
         buttonOpenParenthesis.setOnClickListener { textField.text = "${textField.text}(" }
         buttonCloseParenthesis.setOnClickListener { textField.text = "${textField.text})" }
         buttonDecimal.setOnClickListener { textField.text = "${textField.text}." }
         buttonAllClear.setOnClickListener { textField.text = "" }
 
+
+
     }
 
-    private fun calculate(s: String): String {
-        val exp: List<Any> = toRPN(s)
-        val operands = Stack<Int>()
-        with(operands) {
-            for (c in exp) {
-                if (c is Int) {
-                    push(c)
-                    continue
-                }
-                when (c) {
-                    '+' -> push(pop() + pop())
-                    '-' -> push(pop().let { pop() - it })
-                    '*' -> push(pop() * pop())
-                    '/' -> push(pop().let { pop() / it })
-                }
-            }
-        }
-        return operands.pop().toString()
-    }
 
-    val Char.weight get() = when(this) {
-        '+' -> 1
-        '-' -> 1
-        '*' -> 2
-        '/' -> 2
-        '(' -> 0
-        else -> TODO()
-    }
-
-    private fun toRPN(s: String): List<Any> {
-        val ret = mutableListOf<Any>()
-        val ops = Stack<Char>()
-
-        var i = 0
-        while (i < s.length) {
-            val c = s[i]
-            if (c.isDigit()) {
-                var n = c - '0'
-                while (++i < s.length && s[i].isDigit()) {
-                    n = 10 * n + (s[i] - '0')
-                }
-                ret += n
-                continue
-            }
-
-            when {
-                c == ' ' -> { }
-                c == '(' -> ops.push(c)
-                c == ')' -> {
-                    while (ops.peek() != '(') ret += ops.pop()
-                    ops.pop()
-                }
-                c.isDigit() -> ret += c
-                else -> {
-                    while (!ops.isEmpty() && ops.peek().weight >= c.weight) {
-                        ret += ops.pop()
-                    }
-                    ops.push(c)
-                }
-            }
-
-            i++
-        }
-        while (!ops.isEmpty()) ret += ops.pop()
-        return ret
-    }
 
 }
