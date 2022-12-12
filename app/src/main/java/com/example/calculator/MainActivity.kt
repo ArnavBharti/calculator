@@ -10,6 +10,7 @@ import kotlin.math.pow
 
 class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -52,7 +53,17 @@ class MainActivity : AppCompatActivity() {
         buttonMultiply.setOnClickListener { textField.text = "${textField.text}*" }
         buttonDivide.setOnClickListener { textField.text = "${textField.text}/" }
         buttonPower.setOnClickListener { textField.text = "${textField.text}^" }
-        buttonEquals.setOnClickListener { outputBox.text = evaluate(textField.text.toString()).toString() }
+        buttonEquals.setOnClickListener {
+            try {
+                outputBox.text = evaluate(textField.text.toString()).toString()
+            } catch (e: EmptyStackException) {
+                outputBox.text = "error"
+            } finally {
+                outputBox.text = "error"
+            }
+
+
+        }
         buttonOpenParenthesis.setOnClickListener { textField.text = "${textField.text}(" }
         buttonCloseParenthesis.setOnClickListener { textField.text = "${textField.text})" }
         buttonDecimal.setOnClickListener { textField.text = "${textField.text}." }
@@ -86,28 +97,30 @@ class MainActivity : AppCompatActivity() {
             } else if (c == '(') {
                 operations.push(c) //push character to operators stack
             } else if (c == ')') {
-                while (operations.peek() != '(') {
+                while (!operations.isEmpty() && operations.peek() != '(') {
                     val output = performOperation(operands, operations)
-                    operands.push(output) //push result back to stack
+                    if (output != null) { operands.push(output) }//push result back to stack
                 }
                 operations.pop()
             } else if (isOperator(c)) {
                 while (!operations.isEmpty() && precedence(c) <= precedence(operations.peek())) {
                     val output = performOperation(operands, operations)
-                    operands.push(output) //push result back to stack
+                    if (output != null) { operands.push(output) } //push result back to stack
                 }
-                operations.push(c) //push the current operator to stack
+                operations.push(c)
+                //push the current operator to stack
             }
             i++
         }
-        while (!operations.isEmpty()) {
-            val output = performOperation(operands, operations)
-            operands.push(output) //push final result back to stack
-        }
+        val output = performOperation(operands, operations)
+        if (output != null) {
+            operands.push(output)
+        } //push final result back to stack
+
         return operands.pop()
     }
 
-    private fun precedence(c: Char): Int {
+    fun precedence(c: Char): Int {
         when (c) {
             '+', '-' -> return 1
             '*', '/' -> return 2
@@ -116,26 +129,30 @@ class MainActivity : AppCompatActivity() {
         return -1
     }
 
-    private fun performOperation(operands: Stack<Double>, operations: Stack<Char>): Double {
+    fun performOperation(operands: Stack<Double>, operations: Stack<Char>): Double? {
         val a: Double = operands.pop()
         val b: Double = operands.pop()
+//    val outputBox: TextView = findViewById(R.id.outputBox)
+
         when (operations.pop()) {
-            '+' -> return a + b
-            '-' -> return b - a
-            '*' -> return a * b
+            '+' -> return (a + b)
+            '-' -> return (b - a)
+            '*' -> return (a * b)
             '/' -> {
                 if (a == 0.0) {
-                    println("Cannot divide by zero")
-                    return 0.0
+                    print("found")
+//                outputBox.text = "Cannot divide by zero"
+                    return null
                 }
-                return b / a
+                return (b / a)
             }
             '^' -> return a.pow(b)
         }
-        return 0.0
+//    outputBox.text =  "Error, Try Again"
+        return null
     }
 
-    private fun isOperator(c: Char): Boolean {
+    fun isOperator(c: Char): Boolean {
         return c == '+' || c == '-' || c == '/' || c == '*' || c == '^'
     }
 
