@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import java.util.*
+import kotlin.math.pow
 
 class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
@@ -51,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         buttonMultiply.setOnClickListener { textField.text = "${textField.text}*" }
         buttonDivide.setOnClickListener { textField.text = "${textField.text}/" }
         buttonPower.setOnClickListener { textField.text = "${textField.text}^" }
-        buttonEquals.setOnClickListener { outputBox.text = calculate(textField.text.toString()) }
+        buttonEquals.setOnClickListener { outputBox.text = evaluate(textField.text.toString()).toString() }
         buttonOpenParenthesis.setOnClickListener { textField.text = "${textField.text}(" }
         buttonCloseParenthesis.setOnClickListener { textField.text = "${textField.text})" }
         buttonDecimal.setOnClickListener { textField.text = "${textField.text}." }
@@ -59,71 +60,84 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun calculate(s: String): String {
-        val exp: List<Any> = toRPN(s)
-        val operands = Stack<Int>()
-        with(operands) {
-            for (c in exp) {
-                if (c is Int) {
-                    push(c)
-                    continue
-                }
-                when (c) {
-                    '+' -> push(pop() + pop())
-                    '-' -> push(pop().let { pop() - it })
-                    '*' -> push(pop() * pop())
-                    '/' -> push(pop().let { pop() / it })
-                }
-            }
-        }
-        return operands.pop().toString()
-    }
 
-    val Char.weight get() = when(this) {
-        '+' -> 1
-        '-' -> 1
-        '*' -> 2
-        '/' -> 2
-        '(' -> 0
-        else -> TODO()
-    }
 
-    private fun toRPN(s: String): List<Any> {
-        val ret = mutableListOf<Any>()
-        val ops = Stack<Char>()
-
+    fun evaluate(exp: String): Double {
+        val operands: Stack<Double> = Stack() //Operand stack
+        val operations: Stack<Char> = Stack() //Operator stack
         var i = 0
-        while (i < s.length) {
-            val c = s[i]
-            if (c.isDigit()) {
-                var n = c - '0'
-                while (++i < s.length && s[i].isDigit()) {
-                    n = 10 * n + (s[i] - '0')
-                }
-                ret += n
-                continue
-            }
-
-            when {
-                c == ' ' -> { }
-                c == '(' -> ops.push(c)
-                c == ')' -> {
-                    while (ops.peek() != '(') ret += ops.pop()
-                    ops.pop()
-                }
-                c.isDigit() -> ret += c
-                else -> {
-                    while (!ops.isEmpty() && ops.peek().weight >= c.weight) {
-                        ret += ops.pop()
+        while (i < exp.length) {
+            var c = exp[i]
+            if (Character.isDigit(c)) //check if it is number
+            {
+                //Entry is Digit, and it could be greater than a one-digit number
+                var num = 0.0
+                while (Character.isDigit(c)) {
+                    num = num * 10 + (c - '0')
+                    i++
+                    c = if (i < exp.length) {
+                        exp[i]
+                    } else {
+                        break
                     }
-                    ops.push(c)
                 }
+                i--
+                operands.push(num)
+            } else if (c == '(') {
+                operations.push(c) //push character to operators stack
+            } else if (c == ')') {
+                while (operations.peek() != '(') {
+                    val output = performOperation(operands, operations)
+                    operands.push(output) //push result back to stack
+                }
+                operations.pop()
+            } else if (isOperator(c)) {
+                while (!operations.isEmpty() && precedence(c) <= precedence(operations.peek())) {
+                    val output = performOperation(operands, operations)
+                    operands.push(output) //push result back to stack
+                }
+                operations.push(c) //push the current operator to stack
             }
-
             i++
         }
-        while (!ops.isEmpty()) ret += ops.pop()
-        return ret
+        while (!operations.isEmpty()) {
+            val output = performOperation(operands, operations)
+            operands.push(output) //push final result back to stack
+        }
+        return operands.pop()
     }
+
+    private fun precedence(c: Char): Int {
+        when (c) {
+            '+', '-' -> return 1
+            '*', '/' -> return 2
+            '^' -> return 3
+        }
+        return -1
+    }
+
+    private fun performOperation(operands: Stack<Double>, operations: Stack<Char>): Double {
+        val a: Double = operands.pop()
+        val b: Double = operands.pop()
+        when (operations.pop()) {
+            '+' -> return a + b
+            '-' -> return b - a
+            '*' -> return a * b
+            '/' -> {
+                if (a == 0.0) {
+                    println("Cannot divide by zero")
+                    return 0.0
+                }
+                return b / a
+            }
+            '^' -> return a.pow(b)
+        }
+        return 0.0
+    }
+
+    private fun isOperator(c: Char): Boolean {
+        return c == '+' || c == '-' || c == '/' || c == '*' || c == '^'
+    }
+
 
 }
