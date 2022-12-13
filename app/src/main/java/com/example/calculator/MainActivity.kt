@@ -139,7 +139,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 i++
             }
-            if (!operations.isEmpty() && operands.size > 1) {
+            while (!operations.isEmpty() && operands.size >= 1) {
                 val output = performOperation(operands, operations)
                 operands.push(output)
             }
