@@ -14,9 +14,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        title = "Calculator by Arnav Bharti"
 
         val textField: TextView = findViewById(R.id.mainView)
         val outputBox: TextView = findViewById(R.id.outputBox)
+        val button: Button = findViewById(R.id.buttonDel)
         val buttonOne: Button = findViewById(R.id.buttonOne)
         val buttonTwo: Button = findViewById(R.id.buttonTwo)
         val buttonThree: Button = findViewById(R.id.buttonThree)
@@ -38,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         val buttonCloseParenthesis: Button = findViewById(R.id.buttonCloseParenthesis)
         val buttonAllClear: Button = findViewById(R.id.buttonAllClear)
 
+        button.setOnClickListener { textField.text = "${textField.text}".dropLast(1) }
         buttonOne.setOnClickListener { textField.text = "${textField.text}1" }
         buttonTwo.setOnClickListener { textField.text = "${textField.text}2" }
         buttonThree.setOnClickListener { textField.text = "${textField.text}3" }
@@ -54,15 +57,7 @@ class MainActivity : AppCompatActivity() {
         buttonDivide.setOnClickListener { textField.text = "${textField.text}/" }
         buttonPower.setOnClickListener { textField.text = "${textField.text}^" }
         buttonEquals.setOnClickListener {
-            try {
-                outputBox.text = evaluate(textField.text.toString()).toString()
-            } catch (e: EmptyStackException) {
-                outputBox.text = "error"
-            } finally {
-                outputBox.text = "error"
-            }
-
-
+            outputBox.text = calculate(textField.text.toString())
         }
         buttonOpenParenthesis.setOnClickListener { textField.text = "${textField.text}(" }
         buttonCloseParenthesis.setOnClickListener { textField.text = "${textField.text})" }
@@ -71,56 +66,26 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun performOperation(operands: Stack<Double>, operations: Stack<Char>): Double? {
+        val a: Double = operands.pop()
+        val b: Double = operands.pop()
 
-
-    fun evaluate(exp: String): Double {
-        val operands: Stack<Double> = Stack() //Operand stack
-        val operations: Stack<Char> = Stack() //Operator stack
-        var i = 0
-        while (i < exp.length) {
-            var c = exp[i]
-            if (Character.isDigit(c)) //check if it is number
-            {
-                //Entry is Digit, and it could be greater than a one-digit number
-                var num = 0.0
-                while (Character.isDigit(c)) {
-                    num = num * 10 + (c - '0')
-                    i++
-                    c = if (i < exp.length) {
-                        exp[i]
-                    } else {
-                        break
-                    }
-                }
-                i--
-                operands.push(num)
-            } else if (c == '(') {
-                operations.push(c) //push character to operators stack
-            } else if (c == ')') {
-                while (!operations.isEmpty() && operations.peek() != '(') {
-                    val output = performOperation(operands, operations)
-                    if (output != null) { operands.push(output) }//push result back to stack
-                }
-                operations.pop()
-            } else if (isOperator(c)) {
-                while (!operations.isEmpty() && precedence(c) <= precedence(operations.peek())) {
-                    val output = performOperation(operands, operations)
-                    if (output != null) { operands.push(output) } //push result back to stack
-                }
-                operations.push(c)
-                //push the current operator to stack
-            }
-            i++
+        if (a == 0.0 && operations.peek() == '/') {
+            return null
         }
-        val output = performOperation(operands, operations)
-        if (output != null) {
-            operands.push(output)
-        } //push final result back to stack
 
-        return operands.pop()
+        when (operations.pop()) {
+            '+' -> return (a + b)
+            '-' -> return (b - a)
+            '*' -> return (a * b)
+            '/' -> return (b / a)
+            '^' -> return b.pow(a)
+        }
+
+        return null
     }
 
-    fun precedence(c: Char): Int {
+    private fun precedence(c: Char): Int {
         when (c) {
             '+', '-' -> return 1
             '*', '/' -> return 2
@@ -129,32 +94,61 @@ class MainActivity : AppCompatActivity() {
         return -1
     }
 
-    fun performOperation(operands: Stack<Double>, operations: Stack<Char>): Double? {
-        val a: Double = operands.pop()
-        val b: Double = operands.pop()
-//    val outputBox: TextView = findViewById(R.id.outputBox)
-
-        when (operations.pop()) {
-            '+' -> return (a + b)
-            '-' -> return (b - a)
-            '*' -> return (a * b)
-            '/' -> {
-                if (a == 0.0) {
-                    print("found")
-//                outputBox.text = "Cannot divide by zero"
-                    return null
-                }
-                return (b / a)
-            }
-            '^' -> return a.pow(b)
-        }
-//    outputBox.text =  "Error, Try Again"
-        return null
-    }
-
-    fun isOperator(c: Char): Boolean {
+    private fun isOperator(c: Char): Boolean {
         return c == '+' || c == '-' || c == '/' || c == '*' || c == '^'
     }
 
+    private fun calculate(exp: String): String {
+        try {
+            val operands: Stack<Double> = Stack()
+            val operations: Stack<Char> = Stack()
+            var i = 0
+            while (i < exp.length) {
+                var c = exp[i]
+                if (Character.isDigit(c) || c == '.') {
+                    var num = ""
+                    while (Character.isDigit(c) || c == '.') {
+                        if (c == '.') {
+                            num += "."
+                        } else {
+                            num += c
+                        }
+                        i++
+                        c = if (i < exp.length) {
+                            exp[i]
+                        } else {
+                            break
+                        }
+                    }
+                    i--
+                    operands.push(num.toDouble())
+                } else if (c == '(') {
+                    operations.push(c)
+                } else if (c == ')') {
+                    while (!operations.isEmpty() && operations.peek() != '(') {
+                        val output = performOperation(operands, operations)
+                        operands.push(output)
+                    }
+                    operations.pop()
+                } else if (isOperator(c)) {
+                    while (!operations.isEmpty() && precedence(c) <= precedence(operations.peek())) {
+                        val output = performOperation(operands, operations)
+                        operands.push(output)
+                    }
+                    operations.push(c)
+                }
+                i++
+            }
+            if (!operations.isEmpty() && operands.size > 1) {
+                val output = performOperation(operands, operations)
+                operands.push(output)
+            }
+            return (operands.pop().toString())
+        } catch (e: EmptyStackException) {
+            return ("Error")
+        } catch (e: java.lang.NullPointerException) {
+            return ("Error")
+        }
+    }
 
 }
