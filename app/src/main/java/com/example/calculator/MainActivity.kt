@@ -131,15 +131,61 @@ class MainActivity : AppCompatActivity() {
                     }
                     operations.pop()
                 } else if (isOperator(c)) {
-                    while (!operations.isEmpty() && precedence(c) <= precedence(operations.peek())) {
-                        val output = performOperation(operands, operations)
-                        operands.push(output)
+                    if (c == '-' && i==0) {
+                        var num = "-"
+                        i++
+                        if (i < exp.length) {
+                            c = exp[i]
+                        }
+                        while ((Character.isDigit(c) || c == '.') || c == '-' && isOperator(exp[i-1])) {
+                            if (c == '.') {
+                                num += "."
+                            } else {
+                                num += c
+                            }
+                            i++
+                            c = if (i < exp.length) {
+                                exp[i]
+                            } else {
+                                break
+                            }
+                        }
+                        i--
+                        operands.push(num.toDouble())
+                    } else if ((c == '-' && isOperator(exp[i-1])) || (c == '-' && exp[i-1] in listOf('(',')'))) {
+                        var num = "-"
+                        i++
+                        if (i < exp.length) {
+                            c = exp[i]
+                        }
+                        while (Character.isDigit(c) || c == '.') {
+                            if (c == '.') {
+                                num += "."
+                            } else {
+                                num += c
+                            }
+                            i++
+                            c = if (i < exp.length) {
+                                exp[i]
+                            } else {
+                                break
+                            }
+                        }
+                        i--
+                        operands.push(num.toDouble())
+                    } else {
+
+                        while (!operations.isEmpty() && precedence(c) <= precedence(operations.peek())) {
+                            val output = performOperation(operands, operations)
+                            operands.push(output)
+                        }
+                        operations.push(c)
                     }
-                    operations.push(c)
+
                 }
                 i++
             }
-            if (!operations.isEmpty() && operands.size > 1) {
+            while (!operations.isEmpty() && operands.size >= 1) {
                 val output = performOperation(operands, operations)
                 operands.push(output)
             }
@@ -148,6 +194,10 @@ class MainActivity : AppCompatActivity() {
             return ("Error")
         } catch (e: java.lang.NullPointerException) {
             return ("Error")
+        } catch (e: NotImplementedError) {
+            return "Error"
+        } catch (e: NumberFormatException) {
+            return "Error"
         }
     }
 
