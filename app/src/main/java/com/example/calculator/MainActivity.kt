@@ -152,7 +152,7 @@ class MainActivity : AppCompatActivity() {
                         }
                         i--
                         operands.push(num.toDouble())
-                    } else if (c == '-' && isOperator(exp[i-1])) {
+                    } else if ((c == '-' && isOperator(exp[i-1])) || (c == '-' && exp[i-1] in listOf('(',')'))) {
                         var num = "-"
                         i++
                         if (i < exp.length) {
