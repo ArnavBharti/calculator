@@ -13,12 +13,13 @@ import com.example.calculator.history.History
 class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     lateinit var binding: ActivityMainBinding
-    lateinit var holder: ActivityHistoryBinding
+    lateinit var holder:
+            ActivityHistoryBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        title = "Calculator by Arnav Bharti"
+        title = "Standard Calculator"
         binding.buttonDel.setOnClickListener {
             binding.mainView.text = "${binding.mainView.text}".dropLast(1)
         }

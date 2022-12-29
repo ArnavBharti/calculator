@@ -31,7 +31,7 @@
         android:text="@string/del"
         app:layout_constraintBottom_toTopOf="@+id/buttonPower2"
         app:layout_constraintEnd_toStartOf="@+id/buttonDivision2"
-        app:layout_constraintStart_toEndOf="@+id/buttonMatrix2"
+        app:layout_constraintStart_toEndOf="@+id/buttonNormal"
         app:layout_constraintTop_toBottomOf="@+id/outputBox2" />
 
     <Button
@@ -63,7 +63,7 @@
         app:layout_constraintTop_toBottomOf="@+id/buttonNine2" />
 
     <Button
-        android:id="@+id/buttonMatrix2"
+        android:id="@+id/buttonNormal"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="5dp"
@@ -157,16 +157,21 @@
         android:contentDescription="@string/history"
         android:src="@drawable/ic_baseline_history_24"
         app:layout_constraintBottom_toTopOf="@+id/buttonOpenParenthesis2"
-        app:layout_constraintEnd_toStartOf="@+id/buttonMatrix2"
+        app:layout_constraintEnd_toStartOf="@+id/buttonNormal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/outputBox2" />
 
     <TextView
         android:id="@+id/outputBox2"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
         android:textSize="25sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/buttonNormal"
+        app:layout_constraintEnd_toStartOf="@+id/buttonSquareOpen"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mainView2"
         tools:text="Answer" />
@@ -179,7 +184,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="5dp"
-        android:text="@string/enter"
+        android:text="@string/_equalsToSign"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/buttonAllClear2"
@@ -211,7 +216,7 @@
         app:layout_constraintBottom_toTopOf="@+id/buttonEight2"
         app:layout_constraintEnd_toStartOf="@+id/buttonPower2"
         app:layout_constraintStart_toEndOf="@+id/buttonOpenParenthesis2"
-        app:layout_constraintTop_toBottomOf="@+id/buttonMatrix2" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonNormal" />
 
     <Button
         android:id="@+id/buttonOpenParenthesis2"
@@ -259,6 +264,9 @@
         android:id="@+id/mainView2"
         android:layout_width="0dp"
         android:layout_height="174dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
         android:textAlignment="textStart"
         android:textSize="30sp"
         app:autoSizeMinTextSize="26sp"
@@ -347,20 +355,39 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="5dp"
-        android:text="@string/_powerSign"
+        android:text=","
         app:layout_constraintBottom_toTopOf="@+id/buttonNine2"
         app:layout_constraintEnd_toStartOf="@+id/buttonMultiplication2"
         app:layout_constraintStart_toEndOf="@+id/buttonCloseParenthesis2"
         app:layout_constraintTop_toBottomOf="@+id/buttonDel2" />
 
-    <TextView
-        android:id="@+id/commandText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@+id/mainView2"
+    <Button
+        android:id="@+id/buttonSquareClosed"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        android:text="]"
+        app:layout_constraintBottom_toTopOf="@+id/buttonDivision2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="command" />
+        app:layout_constraintStart_toEndOf="@+id/buttonDel2"
+        app:layout_constraintTop_toBottomOf="@+id/mainView2"
+        app:layout_constraintVertical_bias="0.263" />
+
+    <Button
+        android:id="@+id/buttonSquareOpen"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        android:text="["
+        app:layout_constraintBottom_toTopOf="@+id/buttonDel2"
+        app:layout_constraintEnd_toStartOf="@+id/buttonSquareClosed"
+        app:layout_constraintStart_toEndOf="@+id/outputBox2"
+        app:layout_constraintTop_toBottomOf="@+id/mainView2" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

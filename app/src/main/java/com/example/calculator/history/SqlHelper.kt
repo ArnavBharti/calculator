@@ -18,7 +18,7 @@ class SqlHelper(context:Context): SQLiteOpenHelper(context, DATABASE_NAME, null,
     }
 
     override fun onCreate(p0: SQLiteDatabase?) {
-        val createTblHistory = ("CREATE TABLE " + TBL_HISTORY + "(" + ID + "INTEGER PRIMARY KEY, " + EXPRESSION + "TEXT," + OUTPUT + "TEXT)")
+        val createTblHistory = ("CREATE TABLE $TBL_HISTORY($ID INTEGER PRIMARY KEY, $EXPRESSION TEXT, $OUTPUT TEXT)")
         p0?.execSQL(createTblHistory)
     }
 
