@@ -2,93 +2,62 @@ package com.example.calculator.history
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
-    SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION) {
-
-    // below is the method for creating a database by a sqlite query
+//The class is extending SQLiteOpenHelper
+class DBHelper(context: Context?) :
+    SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     override fun onCreate(db: SQLiteDatabase) {
-        // below is a sqlite query, where column names
-        // along with their data types is given
-        val query = ("CREATE TABLE " + TABLE_NAME + " ("
-                + ID_COL + " INTEGER PRIMARY KEY, " +
-                EXPRESSION_COL + " TEXT," +
-                OUTPUT_COL + " TEXT" + ")")
-
-        // we are calling sqlite
-        // method for executing our query
-        db.execSQL(query)
+        val CREATE_CONTACTS_TABLE =
+            "CREATE	TABLE $TABLE_HISTORY($COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,$COLUMN_EXPRESSION TEXT,$COLUMN_OUTPUT TEXT)"
+        db.execSQL(CREATE_CONTACTS_TABLE)
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, p1: Int, p2: Int) {
-        // this method is to check if table already exists
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME)
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_HISTORY")
         onCreate(db)
     }
 
-    // This method is for adding data in our database
-    fun addHistory(expression : String, output : String ){
-
-        // below we are creating
-        // a content values variable
-        val values = ContentValues()
-
-        // we are inserting our values
-        // in the form of key-value pair
-        values.put(EXPRESSION_COL, "Expression: " + expression)
-        values.put(OUTPUT_COL, "Answer: " + output)
-
-        // here we are creating a
-        // writable variable of
-        // our database as we want to
-        // insert value in our database
-        val db = this.writableDatabase
-
-        // all values are inserted into database
-        db.insert(TABLE_NAME, null, values)
-
-        // at last we are
-        // closing our database
-        db.close()
-    }
-
-    // below method is to get
-    // all data from our database
-    fun getHistory(): Cursor? {
-
-        // here we are creating a readable
-        // variable of our database
-        // as we want to read value from it
+    fun listHistory(): ArrayList<HistoryViewModel> {
+        val sql = "select * from $TABLE_HISTORY"
         val db = this.readableDatabase
-
-        // below code returns a cursor to
-        // read data from the database
-        return db.rawQuery("SELECT * FROM $TABLE_NAME ORDER BY $ID_COL DESC LIMIT 50" , null)
-
+        val storeContacts: ArrayList<HistoryViewModel> = ArrayList()
+        val cursor = db.rawQuery(sql, null)
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getString(0).toInt()
+                val expression = cursor.getString(1)
+                val output = cursor.getString(2)
+                storeContacts.add(HistoryViewModel(id, expression, output))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        storeContacts.reverse()
+        storeContacts.take(50)
+        return storeContacts
     }
 
-    companion object{
-        // here we have defined variables for our database
+    fun addHistory(historyViewModel: HistoryViewModel) {
+        val values = ContentValues()
+        values.put(COLUMN_EXPRESSION, "Expression: "+historyViewModel.expression)
+        values.put(COLUMN_OUTPUT, "Answer: "+historyViewModel.output)
+        val db = this.writableDatabase
+        db.insert(TABLE_HISTORY, null, values)
+    }
 
-        // below is variable for database name
-        private val DATABASE_NAME = "GEEKS_FOR_GEEKS"
 
-        // below is the variable for database version
-        private val DATABASE_VERSION = 1
+    fun deleteHistory() {
+        val db = this.writableDatabase
+        db.execSQL("DELETE FROM $TABLE_HISTORY")
+    }
 
-        // below is the variable for table name
-        val TABLE_NAME = "gfg_table"
-
-        // below is the variable for id column
-        val ID_COL = "id"
-
-        // below is the variable for name column
-        val EXPRESSION_COL = "name"
-
-        // below is the variable for age column
-        val OUTPUT_COL = "age"
+    companion object {
+        private const val DATABASE_VERSION = 5
+        private const val DATABASE_NAME = "history"
+        private const val TABLE_HISTORY = "history"
+        private const val COLUMN_ID = "_id"
+        private const val COLUMN_EXPRESSION = "expression"
+        private const val COLUMN_OUTPUT = "output"
     }
 }

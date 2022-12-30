@@ -10,6 +10,7 @@ import com.example.calculator.databinding.ActivityHistoryBinding
 import com.example.calculator.databinding.ActivityMainBinding
 import com.example.calculator.history.DBHelper
 import com.example.calculator.history.History
+import com.example.calculator.history.HistoryViewModel
 
 class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
@@ -65,19 +66,14 @@ class MainActivity : AppCompatActivity() {
         }
         binding.buttonEqualsSign.setOnClickListener {
             binding.outputBox.text = Calculate().calculate(binding.mainView.text.toString())
-            // below we have created
-            // a new DBHelper class,
-            // and passed context to it
-            val db = DBHelper(this, null)
 
-            // creating variables for values
-            // in name and age edit texts
-            val input = binding.mainView.text.toString()
-            val output = binding.outputBox.text.toString()
+            if (binding.outputBox.text.toString() != "Error") {
+                var mDatabase: DBHelper?
+                mDatabase = DBHelper(this)
+                val newHistory = HistoryViewModel(binding.mainView.text.toString(), binding.outputBox.text.toString())
+                mDatabase.addHistory(newHistory)
+            }
 
-            // calling method to add
-            // name to our database
-            db.addHistory(input, output)
         }
         binding.buttonOpenParenthesis.setOnClickListener {
             binding.mainView.text = "${binding.mainView.text}("

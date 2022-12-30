@@ -1,49 +1,36 @@
 package com.example.calculator.history
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.example.calculator.R
+import java.util.*
 
 
-class HistoryAdapter(private val mList: List<HistoryViewModel>) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
+class HistoryAdapter( private var listHistory: ArrayList<HistoryViewModel>) :
+    RecyclerView.Adapter<HistoryViewHolder>(){
 
-    // create new views
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        // inflates the card_view_design view
-        // that is used to hold list item
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.card_items_std, parent, false)
-
-        return ViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
+        val view: View =
+            LayoutInflater.from(parent.context).inflate(R.layout.card_items_std, parent, false)
+        return HistoryViewHolder(view)
     }
 
-    // binds the list items to a view
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
-        val HistoryViewModel = mList[position]
-
-        // sets the text to the textview from our itemHolder class
-        holder.textView.text = HistoryViewModel.text
-        holder.textView2.text = HistoryViewModel.text2
-
+    override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
+        val history = listHistory[position]
+        holder.expression.text = history.expression
+        holder.output.text = history.output
     }
 
-    // return the number of the items in the list
     override fun getItemCount(): Int {
-        return mList.size
+        return listHistory.size
     }
 
-    // Holds the views for adding it to image and text
-    class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
-        val textView: TextView = itemView.findViewById(R.id.expressionView)
-        val textView2: TextView = itemView.findViewById(R.id.outputView)
-
-    }
 }
+
 
 
 
