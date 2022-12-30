@@ -22,4 +22,10 @@
     <string name="_8">8</string>
     <string name="_9">9</string>
     <string name="del">DEL</string>
+    <string name="matrix">Matrix</string>
+    <string name="history">HISTORY</string>
+    <string name="back">back</string>
+    <string name="normal">normal</string>
+    <string name="enter">enter</string>
+    <string name="delete">delete</string>
 </resources>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".standard_calculator.MainActivity">
 
     <TextView
         android:id="@+id/mainView"
@@ -17,7 +17,7 @@
         android:textSize="30sp"
         app:autoSizeMinTextSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/equation" />
@@ -26,9 +26,8 @@
         android:id="@+id/outputBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
         android:textSize="25sp"
-        app:layout_constraintEnd_toStartOf="@+id/buttonDel"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mainView"
         tools:text="Answer" />
@@ -45,7 +44,7 @@
         app:layout_constraintBottom_toTopOf="@+id/buttonSeven"
         app:layout_constraintEnd_toStartOf="@+id/buttonCloseParenthesis"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/outputBox" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonHistory" />
 
     <Button
         android:id="@+id/buttonDivision"
@@ -73,7 +72,7 @@
         app:layout_constraintBottom_toTopOf="@+id/buttonEight"
         app:layout_constraintEnd_toStartOf="@+id/buttonPower"
         app:layout_constraintStart_toEndOf="@+id/buttonOpenParenthesis"
-        app:layout_constraintTop_toBottomOf="@+id/outputBox" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonMatrix" />
 
     <Button
         android:id="@+id/buttonPower"
@@ -85,9 +84,9 @@
         android:layout_marginBottom="5dp"
         android:text="@string/_powerSign"
         app:layout_constraintBottom_toTopOf="@+id/buttonNine"
-        app:layout_constraintEnd_toStartOf="@+id/buttonDivision"
+        app:layout_constraintEnd_toStartOf="@+id/buttonMultiplication"
         app:layout_constraintStart_toEndOf="@+id/buttonCloseParenthesis"
-        app:layout_constraintTop_toBottomOf="@+id/outputBox" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonDel" />
 
     <Button
         android:id="@+id/buttonSeven"
@@ -315,14 +314,45 @@
 
     <Button
         android:id="@+id/buttonDel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="5dp"
         android:text="@string/del"
-        app:layout_constraintBottom_toTopOf="@+id/buttonDivision"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainView" />
+        app:layout_constraintBottom_toTopOf="@+id/buttonOpenParenthesis"
+        app:layout_constraintEnd_toStartOf="@+id/buttonDivision"
+        app:layout_constraintStart_toEndOf="@+id/buttonMatrix"
+        app:layout_constraintTop_toBottomOf="@+id/outputBox" />
+
+    <Button
+        android:id="@+id/buttonMatrix"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        android:text="ARRAY"
+        app:layout_constraintBottom_toTopOf="@+id/buttonCloseParenthesis"
+        app:layout_constraintEnd_toStartOf="@+id/buttonDel"
+        app:layout_constraintStart_toEndOf="@+id/buttonHistory"
+        app:layout_constraintTop_toBottomOf="@+id/outputBox" />
+
+    <ImageButton
+        android:id="@+id/buttonHistory"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        android:contentDescription="@string/history"
+        android:src="@drawable/ic_baseline_history_24"
+        app:layout_constraintBottom_toTopOf="@+id/buttonOpenParenthesis"
+        app:layout_constraintEnd_toStartOf="@+id/buttonMatrix"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/outputBox" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

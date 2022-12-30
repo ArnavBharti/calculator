@@ -13,7 +13,25 @@
         android:theme="@style/Theme.Calculator"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".history.History"
+            android:exported="false"
+            android:screenOrientation="portrait">
+
+        <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".array.Matrix"
+            android:exported="false"
+            android:screenOrientation="portrait">
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".standard_calculator.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>

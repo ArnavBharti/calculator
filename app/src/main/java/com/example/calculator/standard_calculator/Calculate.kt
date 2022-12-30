@@ -1,4 +1,4 @@
-package com.example.calculator
+package com.example.calculator.standard_calculator
 
 import java.util.*
 import kotlin.math.pow
