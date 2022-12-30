@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.TextView
 import com.example.calculator.history.History
 import com.example.calculator.standard_calculator.MainActivity
 import com.example.calculator.R
 import com.example.calculator.databinding.ActivityHistoryBinding
 import com.example.calculator.databinding.ActivityMatrixBinding
+import com.example.calculator.history.DBHelper
 import com.example.calculator.standard_calculator.Calculate
 
 class Matrix : AppCompatActivity() {
@@ -79,6 +81,19 @@ class Matrix : AppCompatActivity() {
         }
         binding.buttonEqualsSign2.setOnClickListener {
             binding.outputBox2.text = ArrayCalculation().calculate(binding.mainView2.text.toString())
+            // below we have created
+            // a new DBHelper class,
+            // and passed context to it
+            val db = DBHelper(this, null)
+
+            // creating variables for values
+            // in name and age edit texts
+            val input = findViewById<TextView>(R.id.mainView2).text.toString()
+            val output = findViewById<TextView>(R.id.mainView2).text.toString()
+
+            // calling method to add
+            // name to our database
+            db.addHistory(input, output)
         }
         binding.buttonOpenParenthesis2.setOnClickListener {
             binding.mainView2.text = "${binding.mainView2.text}("

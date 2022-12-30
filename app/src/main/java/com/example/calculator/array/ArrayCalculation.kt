@@ -2,7 +2,6 @@ package com.example.calculator.array
 
 import com.example.calculator.standard_calculator.Calculate
 
-
 class ArrayCalculation {
     fun calculate (exp: String): String {
         try {
@@ -49,7 +48,7 @@ class ArrayCalculation {
 
             return if (lst1.size == lst2.size) {
                 var listAnswer = mutableListOf<Double>()
-                for (i in 0..lst1.size) {
+                for (i in 0 until lst1.size) {
                     listAnswer.add(lst1[i].toDouble()*lst2[i].toDouble())
                 }
                 listAnswer.toString()
