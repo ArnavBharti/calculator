@@ -38,8 +38,12 @@ class Matrix : AppCompatActivity() {
         binding.buttonDel2.setOnClickListener {
             binding.mainView2.text = "${binding.mainView2.text}".dropLast(1)
         }
-        binding.buttonOne2.setOnClickListener { binding.mainView2.text = "${binding.mainView2.text}1" }
-        binding.buttonTwo2.setOnClickListener { binding.mainView2.text = "${binding.mainView2.text}2" }
+        binding.buttonOne2.setOnClickListener {
+            binding.mainView2.text = "${binding.mainView2.text}1"
+        }
+        binding.buttonTwo2.setOnClickListener {
+            binding.mainView2.text = "${binding.mainView2.text}2"
+        }
         binding.buttonThree2.setOnClickListener {
             binding.mainView2.text = "${binding.mainView2.text}3"
         }
@@ -49,7 +53,9 @@ class Matrix : AppCompatActivity() {
         binding.buttonFive2.setOnClickListener {
             binding.mainView2.text = "${binding.mainView2.text}5"
         }
-        binding.buttonSix2.setOnClickListener { binding.mainView2.text = "${binding.mainView2.text}6" }
+        binding.buttonSix2.setOnClickListener {
+            binding.mainView2.text = "${binding.mainView2.text}6"
+        }
         binding.buttonSeven2.setOnClickListener {
             binding.mainView2.text = "${binding.mainView2.text}7"
         }
@@ -78,12 +84,16 @@ class Matrix : AppCompatActivity() {
             binding.mainView2.text = "${binding.mainView2.text},"
         }
         binding.buttonEqualsSign2.setOnClickListener {
-            binding.outputBox2.text = ArrayCalculation().calculate(binding.mainView2.text.toString())
+            binding.outputBox2.text =
+                ArrayCalculation().calculate(binding.mainView2.text.toString())
 
             if (binding.outputBox2.text.toString() != "Error") {
                 var mDatabase: DBHelper?
                 mDatabase = DBHelper(this)
-                val newHistory = HistoryViewModel(binding.mainView2.text.toString(), binding.outputBox2.text.toString())
+                val newHistory = HistoryViewModel(
+                    binding.mainView2.text.toString(),
+                    binding.outputBox2.text.toString()
+                )
                 mDatabase.addHistory(newHistory)
             }
 
@@ -110,9 +120,12 @@ class Matrix : AppCompatActivity() {
             startActivity(intent)
         }
 
-        binding.buttonSquareOpen.setOnClickListener { binding.mainView2.text = "${binding.mainView2.text}[" }
-        binding.buttonSquareClosed.setOnClickListener { binding.mainView2.text = "${binding.mainView2.text}]" }
-
+        binding.buttonSquareOpen.setOnClickListener {
+            binding.mainView2.text = "${binding.mainView2.text}["
+        }
+        binding.buttonSquareClosed.setOnClickListener {
+            binding.mainView2.text = "${binding.mainView2.text}]"
+        }
 
 
     }

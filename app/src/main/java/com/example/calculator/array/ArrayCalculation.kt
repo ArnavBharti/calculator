@@ -3,12 +3,12 @@ package com.example.calculator.array
 import com.example.calculator.standard_calculator.Calculate
 
 class ArrayCalculation {
-    fun calculate (exp: String): String {
+    fun calculate(exp: String): String {
         try {
             var lst1 = mutableListOf<String>()
             var lst2 = mutableListOf<String>()
             var counter = 0
-            if (exp[counter ] == '[') {
+            if (exp[counter] == '[') {
                 counter++
                 var str = ""
                 while (exp[counter] != ']' && counter < exp.length) {
@@ -27,7 +27,7 @@ class ArrayCalculation {
                         counter++
                         if (exp[counter] == '[') {
                             counter++
-                            str=""
+                            str = ""
                             while (exp[counter] != ']' && counter < exp.length) {
                                 str += exp[counter].toString()
                                 counter++
@@ -38,18 +38,23 @@ class ArrayCalculation {
                                 val lst0 = str.split(',')
                                 for (each in lst0) {
                                     lst2.add(Calculate().calculate(each))
-                                }}
+                                }
+                            }
                         } else {
                             return "Error"
                         }
-                    } else { return "Error" }
+                    } else {
+                        return "Error"
+                    }
                 }
-            } else { return "Error" }
+            } else {
+                return "Error"
+            }
 
             return if (lst1.size == lst2.size) {
                 var listAnswer = mutableListOf<Double>()
                 for (i in 0 until lst1.size) {
-                    listAnswer.add(lst1[i].toDouble()*lst2[i].toDouble())
+                    listAnswer.add(lst1[i].toDouble() * lst2[i].toDouble())
                 }
                 listAnswer.toString()
             } else {
@@ -59,7 +64,6 @@ class ArrayCalculation {
             return "Error"
         }
     }
-
 
 
 }

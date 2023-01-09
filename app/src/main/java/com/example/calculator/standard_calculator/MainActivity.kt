@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var holder:
             ActivityHistoryBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -71,7 +72,10 @@ class MainActivity : AppCompatActivity() {
             if (binding.outputBox.text.toString() != "Error") {
                 var mDatabase: DBHelper?
                 mDatabase = DBHelper(this)
-                val newHistory = HistoryViewModel(binding.mainView.text.toString(), binding.outputBox.text.toString())
+                val newHistory = HistoryViewModel(
+                    binding.mainView.text.toString(),
+                    binding.outputBox.text.toString()
+                )
                 mDatabase.addHistory(newHistory)
             }
 
