@@ -28,4 +28,6 @@
     <string name="normal">normal</string>
     <string name="enter">enter</string>
     <string name="delete">delete</string>
+    <string name="channel_name">DEFAULTR</string>
+    <string name="channel_description">DEFAULT</string>
 </resources>
