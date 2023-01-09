@@ -11,6 +11,7 @@ import com.example.calculator.databinding.ActivityMainBinding
 import com.example.calculator.history.DBHelper
 import com.example.calculator.history.History
 import com.example.calculator.history.HistoryViewModel
+import com.example.calculator.notification.NotificationMain
 
 class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
@@ -93,6 +94,10 @@ class MainActivity : AppCompatActivity() {
         }
         binding.buttonMatrix.setOnClickListener {
             val intent = Intent(this, Matrix::class.java)
+            startActivity(intent)
+        }
+        binding.button.setOnClickListener {
+            val intent = Intent(this, NotificationMain::class.java)
             startActivity(intent)
         }
     }
