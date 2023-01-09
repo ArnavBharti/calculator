@@ -5,7 +5,6 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-//The class is extending SQLiteOpenHelper
 class DBHelper(context: Context?) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     override fun onCreate(db: SQLiteDatabase) {
@@ -40,8 +39,8 @@ class DBHelper(context: Context?) :
 
     fun addHistory(historyViewModel: HistoryViewModel) {
         val values = ContentValues()
-        values.put(COLUMN_EXPRESSION, "Expression: "+historyViewModel.expression)
-        values.put(COLUMN_OUTPUT, "Answer: "+historyViewModel.output)
+        values.put(COLUMN_EXPRESSION, "Expression: " + historyViewModel.expression)
+        values.put(COLUMN_OUTPUT, "Answer: " + historyViewModel.output)
         val db = this.writableDatabase
         db.insert(TABLE_HISTORY, null, values)
     }

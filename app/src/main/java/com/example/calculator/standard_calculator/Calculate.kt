@@ -70,13 +70,13 @@ class Calculate {
                     }
                     operations.pop()
                 } else if (isOperator(c)) {
-                    if (c == '-' && i==0) {
+                    if (c == '-' && i == 0) {
                         var num = "-"
                         i++
                         if (i < exp.length) {
                             c = exp[i]
                         }
-                        while ((Character.isDigit(c) || c == '.') || c == '-' && isOperator(exp[i-1])) {
+                        while ((Character.isDigit(c) || c == '.') || c == '-' && isOperator(exp[i - 1])) {
                             if (c == '.') {
                                 num += "."
                             } else {
@@ -91,7 +91,11 @@ class Calculate {
                         }
                         i--
                         operands.push(num.toDouble())
-                    } else if ((c == '-' && isOperator(exp[i-1])) || (c == '-' && exp[i-1] in listOf('(',')'))) {
+                    } else if ((c == '-' && isOperator(exp[i - 1])) || (c == '-' && exp[i - 1] in listOf(
+                            '(',
+                            ')'
+                        ))
+                    ) {
                         var num = "-"
                         i++
                         if (i < exp.length) {

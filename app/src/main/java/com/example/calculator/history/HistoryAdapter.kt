@@ -1,17 +1,15 @@
 package com.example.calculator.history
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.example.calculator.R
 import java.util.*
 
 
-class HistoryAdapter( private var listHistory: ArrayList<HistoryViewModel>) :
-    RecyclerView.Adapter<HistoryViewHolder>(){
+class HistoryAdapter(private var listHistory: ArrayList<HistoryViewModel>) :
+    RecyclerView.Adapter<HistoryViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
         val view: View =

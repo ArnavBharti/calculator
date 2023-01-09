@@ -100,8 +100,6 @@ class NotificationMain : AppCompatActivity() {
             val answer = Calculate().calculate(binding.mainView3.text.toString())
             binding.outputBox3.text = answer
             if (answer.lowercase() != "error") {
-//                sendNotification(answer)
-//
                 val delayInSeconds = answer.slice(0 until answer.indexOf('.')).toLong()
                 createWorkRequest("Answer Timer", delayInSeconds)
 
@@ -131,52 +129,10 @@ class NotificationMain : AppCompatActivity() {
 
     }
 
-////    SEND NOTIFICATION
-//
-//    @RequiresApi(Build.VERSION_CODES.O)
-//    private fun createNotificationChannel() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            val name = "Notification Title"
-//            val descriptionText = "Notification Description"
-//            val importance = NotificationManager.IMPORTANCE_DEFAULT
-//            val channel = NotificationChannel(CHANNEL_ID,name,importance).apply {
-//                description=descriptionText
-//            }
-//            val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//            notificationManager.createNotificationChannel(channel)
-//        }
-//
-//    }
-//
-//    private fun sendNotification(answer: String) {
-//
-//        val intent = Intent(this, NotificationMain::class.java).apply {
-//            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-//        }
-//        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent,PendingIntent.FLAG_IMMUTABLE )
-//
-//
-//        val bitmap = BitmapFactory.decodeResource(applicationContext.resources, R.drawable.ic_launcher_background)
-//        val bitmapLargeIcon = BitmapFactory.decodeResource(applicationContext.resources, R.drawable.ic_launcher_foreground)
-//
-//        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
-//            .setSmallIcon(R.drawable.ic_baseline_history_24)
-//            .setContentTitle("Answer Timer")
-//            .setContentText("$answer seconds are up!")
-//            .setLargeIcon(bitmapLargeIcon)
-//            .setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap))
-//            .setContentIntent(pendingIntent)
-//            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-//
-//        with(NotificationManagerCompat.from(this)) {
-//            notify(NOTIFICATION_ID, builder.build())
-//        }
-//
-//    }
 
     private fun createWorkRequest(message: String, timeDelayInSeconds: Long) {
         val myWorkRequest = OneTimeWorkRequestBuilder<ReminderWorker>()
-            .setInitialDelay(timeDelayInSeconds,TimeUnit.SECONDS)
+            .setInitialDelay(timeDelayInSeconds, TimeUnit.SECONDS)
             .setInputData(
                 workDataOf(
                     "title" to "Reminder",
