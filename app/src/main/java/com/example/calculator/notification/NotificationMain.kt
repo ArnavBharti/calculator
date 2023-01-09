@@ -99,7 +99,7 @@ class NotificationMain : AppCompatActivity() {
         binding.buttonEqualsSign3.setOnClickListener {
             val answer = Calculate().calculate(binding.mainView3.text.toString())
             binding.outputBox3.text = answer
-            if (answer != "error") {
+            if (answer.lowercase() != "error") {
 //                sendNotification(answer)
 //
                 val delayInSeconds = answer.slice(0 until answer.indexOf('.')).toLong()
